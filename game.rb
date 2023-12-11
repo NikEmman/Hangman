@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require_relative 'welcome'
+require_relative "speech"
 class Game
-    attr_accessor :secret_word , :guesses
+    attr_accessor :secret_word , :guesses, :round, :hashed_word
     def initialize
         @words_array =[]
         @guess
@@ -16,17 +16,31 @@ class Game
         secret_word = @words_array[rand(0...@words_array.size-1)]
     end
 
+    def hash_secret_word
+      hashed_word = "_" * secret_word.size
+    end
+
+    def check_secret_word
+        for n in secret_word.size-1
+          if secret_word.split[n] == @guess
+            hashed_word.split[n] = secret_word.split[n]
+          else
+            Speech.new.wrong_guess
+          end
+        end  
+    end
+
     def get_user_guess
-       Welcome.new.request_guess
+       Speech.new.request_guess
        @guess = gets.chomp.upcase
        
     end
 
-    def validate
-      if @guess.size == 1
+    def valid_input?
+      if ('A'..'Z').to_a.include?(@guess)
         true
       else
-        Welcome.new.wrong_input
+        Speech.new.wrong_input
         false
       end
     end
@@ -35,7 +49,7 @@ class Game
       input = ""
       loop do
          input = get_user_guess
-         break if validate
+         break if valid_input?
       end
       @guess = input 
     end
@@ -43,7 +57,35 @@ class Game
     def update_guesses
       guesses.push(@guess)
     end
+
+    def update_round
+      round = guesses.size
+    end
+    
+    def end?(hashed_word, secret_word, round)
+      hashed_word == secret_word || round == 10
+    end
+
+    def start 
+      loop
+      if secret_word.nil?
+        Speech.new.welcome
+        choose_word
+      else
+        next
+      end
+      validated_guess
+      update_guesses
+      check_secret_word
+      update_round
+      break if end?
+      #check for restart
+      #restart (by Game.new)
+    end
+      # check guess vs secret word
+      # display board with hanged man and guesses[]
+    end
 end
 
-a = Game.new.validated_guess
+a = Game.new
 

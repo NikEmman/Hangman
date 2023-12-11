@@ -1,5 +1,5 @@
 
-# ----------------Gameflow----------------
+# ----------------Game flow----------------
 
 # Game starts and displays Welcome
 
