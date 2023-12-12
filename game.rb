@@ -17,12 +17,12 @@ class Game
   end
 
   def words_pool
-    File.foreach("dictionary.txt") { |line| @words_array.push(line) if line.size > 5 && line.size < 12 }
+    File.foreach("dictionary.txt") { |line| @words_array.push(line) if line.size > 6 && line.size < 12 }
   end
 
   def choose_secret_word
     words_pool
-    @secret_word = @words_array[rand(0...@words_array.size - 1)]
+    @secret_word = @words_array[rand(0...@words_array.size - 1)].strip.upcase
     hash_secret_word
   end
 
@@ -48,13 +48,21 @@ class Game
     @hashed_word = "_" * secret_word.size
   end
 
-  def check_secret_word
-    hashed_word = @hashed_word.chars
-    secret_word.chars.each_with_index do |char, index|
-      hashed_word[index] = char  if char == @guess
+  def check_secret_word(secret, hashed, guess)
+    hashed_word = hashed.chars
+    secret_word = secret.chars
+    if secret_word.include? guess
+      Speech.new.correct_guess
+      secret_word.each_with_index do |char, index|
+        if char == guess
+          hashed_word[index] = guess #problem here
+        end
+      end
+    else
+      Speech.new.wrong_guess(guess)
     end
-    Speech.new.wrong_guess(@guess) if !secret_word.include?(@guess)
-   @hashed_word = hashed_word.join
+    hashed = hashed_word.join
+    binding.pry
   end
 
 
@@ -117,11 +125,10 @@ class Game
     loop do
       validated_guess
       update_guesses
-      check_secret_word
+      check_secret_word(@secret_word,@hashed_word,@guess)
       update_round
       display_hashed_word
       display_guesses
-      binding.pry
       break if end?
       # check for restart
       # restart (by Game.new)

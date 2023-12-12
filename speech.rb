@@ -12,8 +12,7 @@ To start a new game type [new], to load a saved game type [load], to learn about
   WRONG_GUESS =
   TOO_HARD = "It was too hard, huh? Ok, try again"
   RESET = "If you want to play again, type [Y]"
-  HASHED_WORD = 
-  GUESSES = "Your guesses for far are : #{@guesses}"
+  CORRECT_GUESS = "You nailed it, let's go!"
   def initialize
     @guess = ""
     @guesses =[]
@@ -33,15 +32,19 @@ To start a new game type [new], to load a saved game type [load], to learn about
   end
 
   def guesses(guesses)
-    puts "Your guesses for far are : #{guesses}"
+    puts "Your guesses for far are : #{guesses.join(" , ")}"
   end
 
   def hashed_word(hashed)
-    puts "#{hashed}"
+    puts "#{hashed.chars.join(" ")}"
   end
 
   def request_guess
     puts REQUEST_GUESS
+  end
+
+  def correct_guess
+    puts CORRECT_GUESS
   end
 
   def wrong_guess(char)
