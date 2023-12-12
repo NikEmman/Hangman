@@ -1,7 +1,8 @@
+require_relative 'speech'
+require "pry-byebug"
+
 # rubocop:disable Style/StringLiterals
 # frozen_string_literal: true
-
-require_relative "speech"
 # this is my game controller
 class Game
   attr_accessor :secret_word, :guesses, :round, :hashed_word
@@ -9,26 +10,30 @@ class Game
   def initialize
     @words_array = []
     @welcome_input = nil
+    @guesses = []
+    @hashed_word = ""
+    @round = 0
+    @secret_word = nil
   end
 
   def words_pool
     File.foreach("dictionary.txt") { |line| @words_array.push(line) if line.size > 5 && line.size < 12 }
   end
 
-  def choose_word
+  def choose_secret_word
     words_pool
     @secret_word = @words_array[rand(0...@words_array.size - 1)]
     hash_secret_word
   end
 
-  def save_load_help
+  def new_load_help
     case @welcome_input
     when "help"
-    # display_help method
+      display_help
     when "load"
     # load_game method
     when "new"
-      next
+        # no idea
     else
       Speech.new.too_hard
     end
@@ -44,16 +49,14 @@ class Game
   end
 
   def check_secret_word
-    hashed_word = hashed_word.chars
+    hashed_word = @hashed_word.chars
     secret_word.chars.each_with_index do |char, index|
-      if char == @guess
-        hashed_word[index] = char
-      else
-        Speech.new.wrong_guess(@guess)
-      end
+      hashed_word[index] = char  if char == @guess
     end
-    hashed_word.join
+    Speech.new.wrong_guess(@guess) if !secret_word.include?(@guess)
+   @hashed_word = hashed_word.join
   end
+
 
   def welcome
     Speech.new.welcome
@@ -82,12 +85,20 @@ class Game
     guesses.push(@guess)
   end
 
+  def display_hashed_word
+    Speech.new.hashed_word(@hashed_word)
+  end
+
+  def display_guesses
+    Speech.new.guesses(@guesses)
+  end
+
   def update_round
     @round = guesses.size
   end
 
-  def end?(hashed_word, secret_word, round)
-    hashed_word == secret_word || round == 10
+  def end?
+    @hashed_word == @secret_word || @round == 10
   end
 
   def reset?
@@ -97,16 +108,20 @@ class Game
   end
 
   def start
-    # get_word where?
+    
+      if secret_word.nil?
+        welcome
+        new_load_help
+       choose_secret_word
+      end
     loop do
-      next unless secret_word.nil?
-
-      Speech.new.welcome
-      choose_word
       validated_guess
       update_guesses
       check_secret_word
       update_round
+      display_hashed_word
+      display_guesses
+      binding.pry
       break if end?
       # check for restart
       # restart (by Game.new)
