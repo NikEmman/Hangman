@@ -1,8 +1,13 @@
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/ClassLength
+# frozen_string_literal: true
+
 require_relative 'speech'
-require "pry-byebug"
+require 'pry-byebug'
 
 # rubocop:disable Style/StringLiterals
-# frozen_string_literal: true
+
 # this is my game controller
 class Game
   attr_accessor :secret_word, :guesses, :round, :hashed_word
@@ -26,14 +31,18 @@ class Game
     hash_secret_word
   end
 
+  def valid_welcome_input?
+    %w[help new load].include?(@welcome_input.downcase)
+  end
+
   def new_load_help
-    case @welcome_input
+    case @welcome_input.downcase
     when "help"
       display_help
     when "load"
     # load_game method
     when "new"
-        # no idea
+    # no idea
     else
       Speech.new.too_hard
     end
@@ -51,20 +60,18 @@ class Game
   def check_secret_word(secret, hashed, guess)
     hashed_word = hashed.chars
     secret_word = secret.chars
-    if secret_word.include? guess
+    if secret_word.include?(guess)
       Speech.new.correct_guess
       secret_word.each_with_index do |char, index|
-        if char == guess
-          hashed_word[index] = guess #problem here
-        end
+        hashed_word[index] = guess if char == guess
       end
     else
       Speech.new.wrong_guess(guess)
+      @round += 1
     end
-    hashed = hashed_word.join
-    binding.pry
+    @hashed_word = hashed_word.join
+    # binding.pry
   end
-
 
   def welcome
     Speech.new.welcome
@@ -76,16 +83,16 @@ class Game
     @guess = gets.chomp.upcase
   end
 
-  def valid_input?(guess)
+  def valid_guess?(guess)
     ("A".."Z").to_a.include?(guess)
   end
 
   def validated_guess
     loop do
       request_guess
-      break if valid_input?(@guess)
+      break if valid_guess?(@guess) && @guesses.none?(@guess)
 
-      Speech.new.wrong_input
+      @guesses.include?(@guess) ? Speech.new.guess_exists : Speech.new.wrong_input
     end
   end
 
@@ -101,12 +108,12 @@ class Game
     Speech.new.guesses(@guesses)
   end
 
-  def update_round
-    @round = guesses.size
+  def lost?
+    @round == 10
   end
 
-  def end?
-    @hashed_word == @secret_word || @round == 10
+  def win?
+    @hashed_word == @secret_word
   end
 
   def reset?
@@ -115,29 +122,44 @@ class Game
     true if a.upcase == "Y"
   end
 
+  def reset_game
+    return unless reset?
+
+    Game.new.start
+  end
+
+  def clear_screen
+    system("clear")
+  end
+
   def start
-    
-      if secret_word.nil?
+    if secret_word.nil?
+      loop do
         welcome
         new_load_help
-       choose_secret_word
+        break if valid_welcome_input?
       end
+      choose_secret_word
+    end
+
     loop do
       validated_guess
+      clear_screen
       update_guesses
-      check_secret_word(@secret_word,@hashed_word,@guess)
-      update_round
+      check_secret_word(@secret_word, @hashed_word, @guess)
       display_hashed_word
       display_guesses
-      break if end?
-      # check for restart
-      # restart (by Game.new)
+      Speech.new.draw_hanged_man(@round)
+      break if win? || lost?
     end
+    lost? ? Speech.new.lost(@secret_word) : Speech.new.won
+    reset_game
   end
-  # check guess vs secret word
-  # display board with hanged man and guesses[]
 end
 
-a = Game.new
-a.start
+Game.new.start
+
 # rubocop:enable Style/StringLiterals
+# rubocop:enable Metrics/ClassLength
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/AbcSize
