@@ -3,8 +3,10 @@
 # rubocop:disable Metrics/ClassLength
 # frozen_string_literal: true
 
-require_relative 'speech'
+require_relative "speech"
+require "yaml"
 require 'pry-byebug'
+
 
 # rubocop:disable Style/StringLiterals
 
@@ -49,6 +51,7 @@ class Game
   end
 
   def display_help
+    clear_screen
     Speech.new.help
     gets
   end
