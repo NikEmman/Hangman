@@ -1,10 +1,3 @@
-# rubocop:disable Style/StringLiteralsInInterpolation
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Metrics/CyclomaticComplexity
-# rubocop:disable Metrics/AbcSize
-# rubocop:disable Style/StringConcatenation
-# rubocop:disable Metrics/ClassLength
-# frozen_string_literal: true
 
 require_relative 'color'
 
@@ -201,10 +194,3 @@ If not, the #{Color.new.blue("GALLOWS")} start building like :
     end
   end
 end
-
-# rubocop:enable Metrics/ClassLength
-# rubocop:enable Style/StringConcatenation
-# rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/CyclomaticComplexity
-# rubocop:enable Metrics/MethodLength
-# rubocop:enable Style/StringLiteralsInInterpolation

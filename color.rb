@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# colorize text
 class Color
   def black(string)
     "\e[30m#{string}\e[0m"

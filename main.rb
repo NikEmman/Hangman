@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# rubocop:disable Style/StringLiterals
 require_relative 'game'
 require "yaml"
-# game starter
+
 class Main
   def initialize
     @welcome_input = ""
@@ -53,5 +52,3 @@ class Main
 end
 
 Main.new.start
-
-# rubocop:enable Style/StringLiterals

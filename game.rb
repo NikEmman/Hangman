@@ -1,12 +1,6 @@
-# rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Metrics/ClassLength
 # frozen_string_literal: true
 
 require_relative 'speech'
-require 'pry-byebug'
-
-# rubocop:disable Style/StringLiterals
 
 # this is my game controller
 class Game
@@ -137,10 +131,3 @@ class Game
     reset_game
   end
 end
-
-# Game.game_load.start
-
-# rubocop:enable Style/StringLiterals
-# rubocop:enable Metrics/ClassLength
-# rubocop:enable Metrics/MethodLength
-# rubocop:enable Metrics/AbcSize
