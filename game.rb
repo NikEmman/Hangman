@@ -3,10 +3,9 @@
 # rubocop:disable Metrics/ClassLength
 # frozen_string_literal: true
 
-require_relative "speech"
-require "yaml"
+require_relative 'speech'
+require 'yaml'
 require 'pry-byebug'
-
 
 # rubocop:disable Style/StringLiterals
 
@@ -14,13 +13,13 @@ require 'pry-byebug'
 class Game
   attr_accessor :secret_word, :guesses, :round, :hashed_word
 
-  def initialize
+  def initialize(secret_word, guesses, round, hashed_word)
     @words_array = []
     @welcome_input = nil
-    @guesses = []
-    @hashed_word = ""
-    @round = 0
-    @secret_word = nil
+    @guesses = guesses
+    @hashed_word = hashed_word
+    @round = round
+    @secret_word = secret_word
   end
 
   def words_pool
@@ -31,6 +30,11 @@ class Game
     words_pool
     @secret_word = @words_array[rand(0...@words_array.size - 1)].strip.upcase
     hash_secret_word
+  end
+
+  def welcome
+    Speech.new.welcome
+    @welcome_input = gets.chomp
   end
 
   def valid_welcome_input?
@@ -73,12 +77,6 @@ class Game
       @round += 1
     end
     @hashed_word = hashed_word.join
-    # binding.pry
-  end
-
-  def welcome
-    Speech.new.welcome
-    @welcome_input = gets.chomp
   end
 
   def request_guess
@@ -121,14 +119,7 @@ class Game
 
   def reset?
     Speech.new.reset
-    a = gets.chomp
-    true if a.upcase == "Y"
-  end
-
-  def reset_game
-    return unless reset?
-
-    Game.new.start
+    true if gets.chomp.upcase == "Y"
   end
 
   def clear_screen
@@ -156,11 +147,8 @@ class Game
       break if win? || lost?
     end
     lost? ? Speech.new.lost(@secret_word) : Speech.new.won
-    reset_game
   end
 end
-
-Game.new.start
 
 # rubocop:enable Style/StringLiterals
 # rubocop:enable Metrics/ClassLength

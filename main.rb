@@ -1,20 +1,21 @@
+# rubocop:disable Style/StringLiterals
+require_relative 'game'
 
-# ----------------Game flow----------------
+class Main
+  def initialize
+    @new_game = Game.new(nil, [], 0, "")
+  end
 
-# Game starts and displays Welcome
+  def start
+    @new_game.start
+    reset while @new_game.reset? == true
+  end
 
-# then you choose new, load or help
-
-# then game loop starts and input or save_game is requested
-
-# checked vs chosen word 
-
-# reveal the letters found or display not found
-
-# display choices so far
-
-# display HANGMAN
-
-# game loop ends
-
-# restart
+  def reset
+    @new_game.clear_screen
+    @new_game = Game.new(nil, [], 0, "")
+    @new_game.start
+  end
+end
+Main.new.start
+# rubocop:enable Style/StringLiterals

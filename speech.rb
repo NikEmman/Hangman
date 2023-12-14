@@ -1,3 +1,4 @@
+# rubocop:disable Style/StringLiteralsInInterpolation
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/CyclomaticComplexity
 # rubocop:disable Metrics/AbcSize
@@ -12,7 +13,9 @@ class Speech
   WELCOME_TEXT = "----------------------------------------------WELCOME TO HANGMAN----------------------------------
 
 
-To start a new game type [#{Color.new.cyan("new")}], to load a saved game type [#{Color.new.brown("load")}], to learn about the game rules type [#{Color.new.green("help")}])"
+To start a new game type [#{Color.new.cyan("new")}], to load a saved game type [#{Color.new.brown("load")}].
+
+To learn about the game rules type [#{Color.new.green("help")}]."
   HELP_TEXT = "At game start a #{Color.new.red("secret word")} is chosen, between 6 and 11 letters
 then you get to guess a letter that  you believe exists in the #{Color.new.red("secret word")}.
 If it does great!
@@ -25,8 +28,8 @@ If not, the #{Color.new.blue("GALLOWS")} start building like :
    |
    |
   _|___
-  
-  
+
+
   step by step until the man is hanged and you lose:
    _______
    |/      |
@@ -35,14 +38,14 @@ If not, the #{Color.new.blue("GALLOWS")} start building like :
    |       |
    |      / \\
   _|___
-  
+
   In total you get to make 9 mistakes, at 10 #{Color.new.red("BAM!")}
 
   Press [ENTER] to continue" # W_I_P
   WRONG_INPUT = "\nWrong input, type a single letter of the #{Color.new.red("ENGLISH")} alphabet\n"
   REQUEST_GUESS = "\nType a letter to enter your guess:"
   TOO_HARD = "\n#{Color.new.bg_red("It was too hard, huh?")} Ok, try again\n"
-  RESET = "If you want to #{Color.new.red("play again")}, type [Y]"
+  RESET = "\nIf you want to #{Color.new.red("play again")}, type [Y]"
   CORRECT_GUESS = "You #{Color.new.green("nailed it")}, let's go!"
   GUESS_EXISTS = "\nYour guess has already been chosen\n"
   WON = "You are smarter than you look! #{Color.new.green('You won')}!!!"
@@ -196,3 +199,4 @@ end
 # rubocop:enable Metrics/AbcSize
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/MethodLength
+# rubocop:enable Style/StringLiteralsInInterpolation
