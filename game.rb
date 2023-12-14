@@ -4,7 +4,6 @@
 # frozen_string_literal: true
 
 require_relative 'speech'
-require 'yaml'
 require 'pry-byebug'
 
 # rubocop:disable Style/StringLiterals
@@ -15,11 +14,12 @@ class Game
 
   def initialize(secret_word, guesses, round, hashed_word)
     @words_array = []
-    @welcome_input = nil
     @guesses = guesses
     @hashed_word = hashed_word
     @round = round
     @secret_word = secret_word
+    @welcome_input = ""
+    @new_game = nil
   end
 
   def words_pool
@@ -41,17 +41,26 @@ class Game
     %w[help new load].include?(@welcome_input.downcase)
   end
 
+  def validated_input
+    welcome
+    loop do
+      break if valid_welcome_input?
+
+      Speech.new.too_hard
+      welcome
+    end
+  end
+
   def new_load_help
     case @welcome_input.downcase
     when "help"
       display_help
     when "load"
-    # load_game method
-    when "new"
-    # no idea
+      # load_game method
     else
-      Speech.new.too_hard
+      play
     end
+    reset if @new_game.reset?
   end
 
   def display_help
@@ -126,15 +135,16 @@ class Game
     system("clear")
   end
 
-  def start
-    if secret_word.nil?
-      loop do
-        welcome
-        new_load_help
-        break if valid_welcome_input?
-      end
-      choose_secret_word
-    end
+  def game_save
+    File.write("save00.yml", YAML.dump(self))
+  end
+
+  def game_deserialize
+    YAML.load_file(File.read("save00.yml"))
+  end
+
+  def play
+    choose_secret_word if secret_word.nil?
 
     loop do
       validated_guess
@@ -150,6 +160,9 @@ class Game
   end
 end
 
+a = Game.new(nil, [], 0, "")
+a.game_save
+p a.game_deserialize
 # rubocop:enable Style/StringLiterals
 # rubocop:enable Metrics/ClassLength
 # rubocop:enable Metrics/MethodLength

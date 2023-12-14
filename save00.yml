@@ -1,0 +1,8 @@
+--- !ruby/object:Game
+words_array: []
+guesses: []
+hashed_word: ''
+round: 0
+secret_word: 
+welcome_input: ''
+new_game: 

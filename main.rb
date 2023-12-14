@@ -1,21 +1,21 @@
+# frozen_string_literal: true
+
 # rubocop:disable Style/StringLiterals
 require_relative 'game'
-
+require "yaml"
+# game starter
 class Main
   def initialize
     @new_game = Game.new(nil, [], 0, "")
   end
 
-  def start
-    @new_game.start
-    reset while @new_game.reset? == true
-  end
-
   def reset
     @new_game.clear_screen
     @new_game = Game.new(nil, [], 0, "")
-    @new_game.start
+    @new_game.play
   end
 end
-Main.new.start
+
+a = Main.new
+a.game_save
 # rubocop:enable Style/StringLiterals
