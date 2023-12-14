@@ -10,16 +10,15 @@ require 'pry-byebug'
 
 # this is my game controller
 class Game
-  attr_accessor :secret_word, :guesses, :round, :hashed_word
+  attr_accessor :secret_word, :guesses, :round, :hashed_word, :words_array, :welcome_input
 
-  def initialize(secret_word, guesses, round, hashed_word)
-    @words_array = []
+  def initialize(words_array, secret_word, guesses, round, hashed_word, welcome_input)
+    @words_array = words_array
     @guesses = guesses
     @hashed_word = hashed_word
     @round = round
     @secret_word = secret_word
-    @welcome_input = ""
-    @new_game = nil
+    @welcome_input = welcome_input
   end
 
   def words_pool
@@ -139,7 +138,7 @@ class Game
     File.write("save00.yml", YAML.dump(self))
   end
 
-  def game_deserialize
+  def self.game_deserialize
     YAML.load_file(File.read("save00.yml"))
   end
 
@@ -160,9 +159,8 @@ class Game
   end
 end
 
-a = Game.new(nil, [], 0, "")
-a.game_save
-p a.game_deserialize
+b = Game.game_deserialize
+b.play
 # rubocop:enable Style/StringLiterals
 # rubocop:enable Metrics/ClassLength
 # rubocop:enable Metrics/MethodLength

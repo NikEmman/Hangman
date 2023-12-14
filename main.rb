@@ -17,5 +17,5 @@ class Main
 end
 
 a = Main.new
-a.game_save
+
 # rubocop:enable Style/StringLiterals
