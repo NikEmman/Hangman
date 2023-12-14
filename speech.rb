@@ -17,8 +17,11 @@ To start a new game type [#{Color.new.cyan("new")}], to load a saved game type [
 
 To learn about the game rules type [#{Color.new.green("help")}]."
   HELP_TEXT = "At game start a #{Color.new.red("secret word")} is chosen, between 6 and 11 letters
-then you get to guess a letter that  you believe exists in the #{Color.new.red("secret word")}.
-If it does great!
+then you get to guess a letter that you believe exists in the #{Color.new.red("secret word")}.
+
+If your guess is correct, all cases of the letter will appear in the #{Color.new.red("secret word")} like :
+
+_ _ A _ _ A _
 
 If not, the #{Color.new.blue("GALLOWS")} start building like :
     _______
@@ -49,12 +52,17 @@ If not, the #{Color.new.blue("GALLOWS")} start building like :
   CORRECT_GUESS = "You #{Color.new.green("nailed it")}, let's go!"
   GUESS_EXISTS = "\nYour guess has already been chosen\n"
   WON = "You are smarter than you look! #{Color.new.green('You won')}!!!"
+  SAVED = "#{Color.new.cyan("GAME SAVED !")}"
   def welcome
     puts WELCOME_TEXT
   end
 
   def help
     puts HELP_TEXT
+  end
+
+  def saved 
+    puts SAVED
   end
 
   def guess_exists

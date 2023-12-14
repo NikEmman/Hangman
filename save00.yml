@@ -1,9 +1,0 @@
---- !ruby/object:Game
-words_array: []
-guesses:
-- A
-- C
-hashed_word: _______
-round: 2
-secret_word: BOOBIES
-welcome_input: ''
